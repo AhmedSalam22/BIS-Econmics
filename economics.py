@@ -31,16 +31,24 @@ def point_of_intersection(A,B,C,D):
 
 
 class Economics():
-    def demand_supply_cruve(self , data=None , header={'price':'price' , 'Demand':'Demand' , 'Supply':'Supply'}):
+    def demand_supply_cruve(self ,
+                             data=None ,
+                             shift_demand_curve = 0.0 ,
+                             shift_supply_curve = 0.0 ,
+                             header={'price':'price' , 'Demand':'Demand' , 'Supply':'Supply'}):
         """Graph demand and supply curve
         inputs
         --------------------------------
-        Data is a {price:[] , 'Demand':[1,2,3....] , 'Supply':[1,2,3,....] } per unit
+        Data is a {price:[] , 'Demand':[1,2,3....] , 'Supply':[1,2,3,....] } per unit or Use DataFrame
 
         """
-        data =  data if data != None else {'price':list(range(0,201,10)) ,'Demand':list(range(0,401,20))[::-1] , 'Supply':list(range(0,401,20))}
-        data = pd.DataFrame(data)
-
+        try:
+            if  data == None:
+                data =  {'price':list(range(0,201,10)) ,'Demand':list(range(0,401,20))[::-1] , 'Supply':list(range(0,401,20))}
+                data = pd.DataFrame(data)
+        except ValueError:
+            pass
+      
         demand_supply_intersection = point_of_intersection(A=(data[header['Demand']].iloc[0] ,data[header['price']].iloc[0]) ,
                                 B=(data[header['Demand']].iloc[-1] ,data[header['price']].iloc[-1]), 
                                 C=(data[header['Supply']].iloc[-1] ,data[header['price']].iloc[-1]),
@@ -48,12 +56,21 @@ class Economics():
                                  )
 
         fig, ax = plt.subplots()
-        sns.lineplot( x=data[header['Demand']], y=data["price"])
-        sns.lineplot( data=data, x=header['Supply'], y=header['price'])
+        sns.lineplot( x=data[header['Demand']], y=data["price"]  , label="Demand")
+        sns.lineplot( data=data, x=header['Supply'], y=header['price'] , label="Supply")
+        
+        if shift_demand_curve != 0.0:
+            data['shift_demand'] = data[header['Demand']] * (1 + shift_demand_curve)
+            sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Demand")
+                
+        if shift_supply_curve != 0.0:
+            data['shift_supply'] = data[header['Supply']] * (1 + shift_demand_curve)
+            sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Supply")
+
         ax.set_xlabel('Quantity')
         ax.set_ylabel('price')
 
-        ax.annotate('Market equilibrium',
+        ax.annotate('Market equilibrium {}'.format(demand_supply_intersection),
             xy=demand_supply_intersection, xycoords='data',
             xytext=(0.8, 0.95), textcoords='axes fraction',
             arrowprops=dict(facecolor='red', shrink=0.05),
