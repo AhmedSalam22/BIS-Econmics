@@ -26,8 +26,8 @@ if features[0] in selected_features:
     st.header(features[0])
     st.sidebar.header(features[0])
     st.sidebar.markdown('type number of precent in a fraction format ex:instead of "1%" type as 0.01 ')
-    shift_demand_curve = st.sidebar.number_input('Change demand by %' , 0.0)
-    shift_supply_curve = st.sidebar.number_input('Change supply by %' , 0.0)
+    shift_demand_curve = st.sidebar.number_input('Change demand by %')
+    shift_supply_curve = st.sidebar.number_input('Change supply by %')
     if st.sidebar.checkbox('Do you Want to upload your own data?' , False):
         DS_data_uploader = st.sidebar.file_uploader('upload your data here in csv format' )
         DS_Default_Header = {'price':'price' , 'Demand':'Demand' , 'Supply':'Supply'}

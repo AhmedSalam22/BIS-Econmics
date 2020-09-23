@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Point
-
+import time
 def point_of_intersection(A,B,C,D):
     """
     # Given these endpoints
@@ -61,11 +61,17 @@ class Economics():
         
         if shift_demand_curve != 0.0:
             data['shift_demand'] = data[header['Demand']] * (1 + shift_demand_curve)
-            sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Demand")
-                
+            sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Demand" )
+
+           
+
         if shift_supply_curve != 0.0:
             data['shift_supply'] = data[header['Supply']] * (1 + shift_demand_curve)
-            sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Supply")
+            sns.lineplot( x=data['shift_supply'], y=data["price"]  , label="shifted_Supply")
+
+        for ax_i in ax.lines[2:]:
+            ax_i.set_linestyle("--")
+
 
         ax.set_xlabel('Quantity')
         ax.set_ylabel('price')
@@ -76,6 +82,6 @@ class Economics():
             arrowprops=dict(facecolor='red', shrink=0.05),
             horizontalalignment='right', verticalalignment='top')
 
-
+        time.sleep(5)
         return fig
 
