@@ -18,7 +18,11 @@ def header(num_feature):
 def do_something_in_sidebar_True(num_feature , data  ,Default_Header):
     if num_feature == 0:
         st.pyplot(eco.demand_supply_cruve(data=data, header=Default_Header , shift_demand_curve=shift_demand_curve , shift_supply_curve=shift_supply_curve))
-
+    elif num_feature == 1:
+        fig , consumer_equilibrium , consumer_surplus = eco.marginal_utility(data=data, header=Default_Header, price=price)
+        st.markdown("consumer equilibrium = `{}` when price = `{}`".format(consumer_equilibrium , price))
+        st.markdown("consumer surplus = `{}` when price = `{}`".format(consumer_surplus , price))
+        st.pyplot(fig)
 def do_something_in_sidebar_False(num_feature):
     if num_feature == 0:#'Demand and Supply'
         st.pyplot(eco.demand_supply_cruve(shift_demand_curve=shift_demand_curve , shift_supply_curve=shift_supply_curve))
