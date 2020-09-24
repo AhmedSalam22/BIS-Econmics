@@ -31,7 +31,10 @@ the second slice. The satisfaction you receive from the two slices is 36. Three
 slices give you 46 units of utility. This table shows the total utility. Estimate MU.""")
         if st.checkbox("Show example data", False):
             st.dataframe(data)
-        st.pyplot(eco.marginal_utility(price=price))
+        fig , consumer_equilibrium , consumer_surplus = eco.marginal_utility(price=price)
+        st.markdown("consumer equilibrium = `{}` when price = `{}`".format(consumer_equilibrium , price))
+        st.markdown("consumer surplus = `{}` when price = `{}`".format(consumer_surplus , price))
+        st.pyplot(fig)
 
 def sidebar(num_feature , Default_Header ):
     if st.sidebar.checkbox('Do you Want to upload your own data?' , False  , key='chk_'+features[num_feature]):
@@ -76,6 +79,9 @@ if features[1] in selected_features:
 
     sidebar(1 , {'quantity':'quantity' , 'Total utility':'Total utility'})
 
-    if st.sidebar.checkbox('consumer equilibrium?' , True):
-        st.info('Consumer equilibrium exists when the price equals the marginal utility.')
-        st.text("If the price is $x. what is the consumer equilibrium? ")
+    st.subheader('consumer equilibrium?' )
+    st.info('Consumer equilibrium exists when the price equals the marginal utility.')
+    # st.text("If the price is $x. what is the consumer equilibrium? ")
+    st.subheader("Consumer surplus?")
+    st.info("""• Consumer surplus: can be measured by the area under demand curve
+(marginal utility curve) and above the price of good""")

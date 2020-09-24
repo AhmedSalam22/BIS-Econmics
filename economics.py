@@ -57,16 +57,16 @@ class Economics():
                                  )
 
         fig, ax = plt.subplots()
-        sns.lineplot( x=data[header['Demand']], y=data["price"]  , label="Demand")
+        sns.lineplot( x=data[header['Demand']], y=data[header["price"]]  , label="Demand")
         sns.lineplot( data=data, x=header['Supply'], y=header['price'] , label="Supply")
         
         if shift_demand_curve != 0.0:
             data['shift_demand'] = data[header['Demand']] * (1 + shift_demand_curve)
-            sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Demand" )
+            sns.lineplot( x=data['shift_demand'], y=data[header["price"]]  , label="shifted_Demand" )
 
         if shift_supply_curve != 0.0:
             data['shift_supply'] = data[header['Supply']] * (1 + shift_demand_curve)
-            sns.lineplot( x=data['shift_supply'], y=data["price"]  , label="shifted_Supply")
+            sns.lineplot( x=data['shift_supply'], y=data[header["price"]]  , label="shifted_Supply")
         # change style for shifted_Supply and shifted_Demand line to --- dashed line
         for ax_i in ax.lines[2:]:
             ax_i.set_linestyle("--")
@@ -96,9 +96,18 @@ class Economics():
         data['Marginal utility'] = data[header['Total utility']].diff()
         data['Marginal utility'].iloc[0] = data[header['Total utility']].iloc[0].copy()
 
+        consumer_equilibrium = data[data['Marginal utility'] >= price][header['quantity']].max()
+        Consumer_surplus = (data[data['Marginal utility'] >= price]['Marginal utility'] -price).sum()
+
+        print("consumer_equilibrium" , consumer_equilibrium ,"Consumer_surplus" , Consumer_surplus)
+
         fig, ax = plt.subplots()
-        sns.barplot(data=data.sort_values('Marginal utility' , ascending=False) , x='quantity',y='Marginal utility' , color="blue" , label="Marginal utility")
+        # marginal utility
+        sns.barplot(data=data.sort_values('Marginal utility' , ascending=False) , x=header['quantity'],y='Marginal utility' , color="blue" , label="Marginal utility")
+        #Demand Curve
+        # sns.lineplot(data=data , x='quantity' ,y='Marginal utility', color='green', label='estimated Demand Curve(marginal utility curve)')
+        # price line to determine consumer surplus and consumer equilibrium
         if price != 0:
             plt.axhline(y=price, color='r', linestyle='-' , label="Price")
         plt.legend()
-        return fig
+        return fig , consumer_equilibrium , Consumer_surplus
