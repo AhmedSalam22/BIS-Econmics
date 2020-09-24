@@ -3,7 +3,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Point
-import time
+
+
 def point_of_intersection(A,B,C,D):
     """
     # Given these endpoints
@@ -63,25 +64,41 @@ class Economics():
             data['shift_demand'] = data[header['Demand']] * (1 + shift_demand_curve)
             sns.lineplot( x=data['shift_demand'], y=data["price"]  , label="shifted_Demand" )
 
-           
-
         if shift_supply_curve != 0.0:
             data['shift_supply'] = data[header['Supply']] * (1 + shift_demand_curve)
             sns.lineplot( x=data['shift_supply'], y=data["price"]  , label="shifted_Supply")
-
+        # change style for shifted_Supply and shifted_Demand line to --- dashed line
         for ax_i in ax.lines[2:]:
             ax_i.set_linestyle("--")
 
 
         ax.set_xlabel('Quantity')
         ax.set_ylabel('price')
-
+        # add Market equilibrium maket to the graph
         ax.annotate('Market equilibrium {}'.format(demand_supply_intersection),
             xy=demand_supply_intersection, xycoords='data',
             xytext=(0.8, 0.95), textcoords='axes fraction',
             arrowprops=dict(facecolor='red', shrink=0.05),
             horizontalalignment='right', verticalalignment='top')
 
-        time.sleep(5)
         return fig
 
+
+    def marginal_utility(self  , data=None , price=0, header={'quantity':'quantity' , 'Total utility':'Total utility'}):
+        """Marginal utility: is the change in total utility from consuming an additional unit of good. """
+        try:
+            if  data == None:
+                data =  {'quantity':list(range(1,7)) ,'Total utility':[20,36,46,52,54,52]}
+                data = pd.DataFrame(data)
+        except ValueError:
+            pass
+        
+        data['Marginal utility'] = data[header['Total utility']].diff()
+        data['Marginal utility'].iloc[0] = data[header['Total utility']].iloc[0].copy()
+
+        fig, ax = plt.subplots()
+        sns.barplot(data=data.sort_values('Marginal utility' , ascending=False) , x='quantity',y='Marginal utility' , color="blue" , label="Marginal utility")
+        if price != 0:
+            plt.axhline(y=price, color='r', linestyle='-' , label="Price")
+        plt.legend()
+        return fig
