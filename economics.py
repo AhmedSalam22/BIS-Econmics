@@ -111,3 +111,30 @@ class Economics():
             plt.axhline(y=price, color='r', linestyle='-' , label="Price")
         plt.legend()
         return fig , consumer_equilibrium , Consumer_surplus
+
+    def relation_between_output_and_labor(self , data=None ,
+                                                header={"Number of workers":"Number of workers",
+                                                        "Total Product":"Total Product"
+                                                        }):
+
+
+        try:
+            if  data == None:
+                data =  {'Number of workers':list(range(1,8,1)) ,"Total Product": [10,30,60,80,90,90,80]}
+                data = pd.DataFrame(data)
+        except ValueError:
+            pass
+        
+        data['Marginal product'] = data[header['Total Product']].diff()
+        data['Marginal product'].iloc[0] = data[header['Total Product']].iloc[0].copy()
+        
+        data["Average Product"] = data[header["Total Product"]] / data[header["Number of workers"]]
+
+
+        fig, ax = plt.subplots()
+        sns.lineplot(data=data , x=header['Number of workers'] , y=header['Total Product'] , label='Total Product')
+        sns.lineplot(data=data , x=header['Number of workers'] , y='Marginal product' , label='Marginal product')
+        sns.lineplot(data=data , x=header['Number of workers'] , y='Average Product', label='Average Product')
+
+        return fig
+
