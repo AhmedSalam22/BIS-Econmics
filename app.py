@@ -27,8 +27,19 @@ def do_something_in_sidebar_True(num_feature , data  ,Default_Header):
         st.pyplot(eco.relation_between_output_and_labor(data=data , header=Default_Header))
     elif num_feature == 3:
         st.pyplot(eco.average_cost_and_marginal_cost(data=data , header=Default_Header))
-
+    elif num_feature == 4:
+        fig , profit_maximization = eco.prefect_competitive_market(data=data ,price=market_price,  header=Default_Header)
+        st.pyplot(fig)
+        st.info("profit maximization")
+        st.markdown("""
         
+        when the market price is equal to = `{}`
+        The firm maximizes profit at the level of output `{}` ,
+        where marginal revenue equals marginal cost (MR=MC=Marketing price)
+        
+        """.format(profit_maximization[0] , profit_maximization[1]))
+
+
 def do_something_in_sidebar_False(num_feature):
     if num_feature == 0:#'Demand and Supply'
         st.pyplot(eco.demand_supply_cruve(shift_demand_curve=shift_demand_curve , shift_supply_curve=shift_supply_curve))
@@ -83,6 +94,7 @@ features = ['Demand and Supply',
             'Marginal utility and total utility',
             'Relation between output and labor in short run (holding other inputs fixed (capital and technology))',
             'Marginal and Average Costs in the short run',
+            'Perfectly competitive markets',
             ]
 
 # streamlt
@@ -172,5 +184,17 @@ if features[3] in selected_features:
     • When the marginal product of labor is falling, the marginal cost of production
     is rising.
 
+    ```
+    """)
+
+if features[4] in selected_features:
+    header(4)
+    market_price = st.number_input('Market price' , 0.0)
+    sidebar(4 , {'Q':'Q','MC':'MC' , 'AVC' : 'AVC' ,"ATC":"ATC"})
+    st.info("Shut down in the short run")
+    st.markdown("""
+    ```
+    The shutdown point : is the minimum point on the average variable cost.
+     If the price falls below this point, the firm will shut down production
     ```
     """)

@@ -167,7 +167,37 @@ class Economics():
         fig, ax = plt.subplots()
         sns.lineplot(data=data , x=header['Number of workers'] , y='Marginal Cost' , label='Marginal Cost')
         sns.lineplot(data=data , x=header['Number of workers'] , y='Average Cost' , label='Average Cost')
+        ax.set_ylabel('Cost')
 
         return fig
+
+
+    def prefect_competitive_market(self , data , price=0 , header={'Q':'Q','MC':'MC' , 'AVC' : 'AVC' ,"ATC":"ATC"}):
+        
+        data['Price'] = price
+        profit_maximization = point_of_intersection(A=(data[header['MC']].iloc[0] ,data[header['Q']].iloc[0]) ,
+                        B=(data[header['MC']].iloc[-1] ,data[header['Q']].iloc[-1]), 
+                        C=(data['Price'].iloc[-1] ,data[header['Q']].iloc[-1]),
+                        D= (data['Price'].iloc[0] ,data[header['Q']].iloc[0]),
+                            )
+        # profit_maximization =  data[data[header['MC']] <= price][header['MC']].max()
+        # print(profit_maximization)
+        fig, ax = plt.subplots()
+        sns.lineplot(data=data , x=header['Q'] , y=header['MC'] , label='MC')
+        sns.lineplot(data=data , x=header['Q'] , y=header['AVC'] , label='AVC')
+        sns.lineplot(data=data , x=header['Q'] , y=header['ATC'] , label='ATC')
+
+        shutdown_point =    data[data[header['AVC']] == data[header['AVC']].min()][header['Q']].values[0] , data[header['AVC']].min() 
+        if price != 0:
+            sns.lineplot(data=data , x=header['Q'] , y='Price' , label="Market Price")
+
+        ax.annotate('shutdown point {}'.format(shutdown_point),
+            xy=shutdown_point, xycoords='data',
+            xytext=(0.8, 0.50), textcoords='axes fraction',
+            arrowprops=dict(facecolor='red', shrink=0.01),
+            horizontalalignment='right', verticalalignment='top')
+
+     
+        return fig , profit_maximization
 
 
