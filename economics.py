@@ -3,6 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Point
+import streamlit as st
 
 
 def point_of_intersection(A,B,C,D):
@@ -137,4 +138,36 @@ class Economics():
         sns.lineplot(data=data , x=header['Number of workers'] , y='Average Product', label='Average Product')
 
         return fig
+
+    
+    def average_cost_and_marginal_cost(self , data=None , streamlit=True,  header={
+        'Number of workers':'Number of workers',
+        'output':'output',
+        'Total cost':'Total cost'
+    }):
+        try:
+            if  data == None:
+                data =  {'Number of workers':list(range(0,7,1)) ,
+                         'output':[0,200,450,550,600,625, 640] ,
+                         'Total cost':[800,1400,2000,2600,3200,3800,4400]
+                        }
+                data = pd.DataFrame(data)
+        except ValueError:
+            pass
+        
+        data['Marginal Cost'] = data[header['Total cost']].diff() / data[header['output']].diff() 
+        data['Marginal Cost'] =data['Marginal Cost'].fillna(0 )
+
+        data['Average Cost'] = data[header['Total cost']] / data[header['output']]
+        data['Average Cost'] =data['Average Cost'].fillna(0 )
+
+        if streamlit == True:
+            st.dataframe(data)
+
+        fig, ax = plt.subplots()
+        sns.lineplot(data=data , x=header['Number of workers'] , y='Marginal Cost' , label='Marginal Cost')
+        sns.lineplot(data=data , x=header['Number of workers'] , y='Average Cost' , label='Average Cost')
+
+        return fig
+
 
