@@ -201,3 +201,28 @@ class Economics():
         return fig , profit_maximization
 
 
+    def monpoly(self , data , header={'Q':'Q', 'P':'P'	, 'MR':'MR'	,'MC':'MC' , 'ATC':'ATC'}):
+
+        profit_maximization = point_of_intersection(A=(data[header['MC']].iloc[0] ,data[header['Q']].iloc[0]) ,
+                        B=(data[header['MC']].iloc[-1] ,data[header['Q']].iloc[-1]), 
+                        C=(data['MR'].iloc[-1] ,data[header['Q']].iloc[-1]),
+                        D= (data['MR'].iloc[0] ,data[header['Q']].iloc[0]),
+                            )
+        print("profit_maximization", profit_maximization)
+
+        fig , ax = plt.subplots()
+        sns.lineplot(data=data , x=header['Q'] , y=header['MC'] , label='MC')
+        sns.lineplot(data=data , x=header['Q'] , y=header['MR'] , label='MR')
+        sns.lineplot(data=data , x=header['Q'] , y=header['ATC'] , label='ATC')
+
+        ax.set_ylabel('Price')
+        ax.set_xlabel('Quantity')
+
+        ax.annotate('profit maximization {}'.format((profit_maximization[1],profit_maximization[0])),
+                    xy=(profit_maximization[1],profit_maximization[0]), xycoords='data',
+                    xytext=(0.8, 0.95), textcoords='axes fraction',
+                    arrowprops=dict(facecolor='red', shrink=0.05),
+                    horizontalalignment='right', verticalalignment='top')
+
+        return fig , profit_maximization
+

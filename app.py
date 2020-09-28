@@ -6,6 +6,7 @@ import time
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 # functions
+@st.cache(persist=True)
 def file_uploder(path):
     df = pd.read_csv(path , sep=';')
     return df
@@ -38,8 +39,16 @@ def do_something_in_sidebar_True(num_feature , data  ,Default_Header):
         where marginal revenue equals marginal cost (MR=MC=Marketing price)
         
         """.format(profit_maximization[0] , profit_maximization[1]))
+    elif num_feature == 5:
+        fig , profit_maximization = eco.monpoly(data=data , header=Default_Header)
+        st.pyplot(fig)
+        st.info('How does a monopoly choose price and output ?')
+        st.markdown('• profit maximizing output is, where MR=MC')
+        st.markdown('• The firm will produce the level of output, where MR=MC. = `{}` units'.format(profit_maximization[1]))
 
-
+        st.warning("""The monopoly firm makes economic profit in the short run and long
+run because the entry of new firms to the market is blocked.
+""")
 def do_something_in_sidebar_False(num_feature):
     if num_feature == 0:#'Demand and Supply'
         st.pyplot(eco.demand_supply_cruve(shift_demand_curve=shift_demand_curve , shift_supply_curve=shift_supply_curve))
@@ -95,6 +104,7 @@ features = ['Demand and Supply',
             'Relation between output and labor in short run (holding other inputs fixed (capital and technology))',
             'Marginal and Average Costs in the short run',
             'Perfectly competitive markets',
+            'Monopoly'
             ]
 
 # streamlt
@@ -198,3 +208,9 @@ if features[4] in selected_features:
      If the price falls below this point, the firm will shut down production
     ```
     """)
+
+if features[5] in selected_features:
+    header(5)
+    set_price = st.number_input('set price' , 0.0)
+    sidebar(5 , {'Q':'Q', 'P':'P'	, 'MR':'MR'	,'MC':'MC' , 'ATC':'ATC'})
+    # st.info('How does a monopoly choose price and output ?')
