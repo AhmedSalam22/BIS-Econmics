@@ -211,6 +211,5 @@ if features[4] in selected_features:
 
 if features[5] in selected_features:
     header(5)
-    set_price = st.number_input('set price' , 0.0)
     sidebar(5 , {'Q':'Q', 'P':'P'	, 'MR':'MR'	,'MC':'MC' , 'ATC':'ATC'})
     # st.info('How does a monopoly choose price and output ?')
